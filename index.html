@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Szélesbálási Kalaplengető - Hivatalos Oldal</title>
+<style>
+  :root {
+    --primary-color: #222;
+    --accent-color: #d4a017; /* Aranyos szín a kiemeléshez */
+    --bg-overlay: rgba(255, 255, 255, 0.85);
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* A háttérkép elérési útját hagytam, de tettem be egy backup színt */
+    background: #ececec url('../iktmikulas/ChatGPT Image 2025. dec. 11. 11_30_00.png') center/cover fixed;
+    margin: 0;
+    color: #111;
+    overflow-x: hidden;
+  }
+
+  /* NAVIGÁCIÓ */
+  nav {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  nav .logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  nav ul li a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: 0.3s;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  nav ul li a:hover {
+    color: var(--accent-color);
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* FŐ ELRENDEZÉS (REKLÁMOKKAL) */
+  .main-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* REKLÁM SÁVOK */
+  .ad-sidebar {
+    flex: 0 0 160px; /* Fix szélesség */
+    min-height: 600px;
+    background: linear-gradient(180deg, #f8f8f8, #e0e0e0);
+    border: 1px dashed #bbb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    position: sticky;
+    top: 80px; /* Hogy görgetéskor fent maradjon */
+    border-radius: 8px;
+  }
+  
+  .ad-sidebar img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+
+  /* KÖZÉPSŐ TARTALOM */
+  .content-wrapper {
+    flex: 1;
+    max-width: 1000px;
+    background: var(--bg-overlay);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
+  }
+
+  h1, h2 {
+    color: var(--primary-color);
+    text-align: center;
+  }
+  
+  h1 { margin-top: 0; border-bottom: 2px solid var(--accent-color); padding-bottom: 15px; }
+  h2 { margin-top: 40px; font-size: 1.5rem; }
+
+  .info-box {
+    background: rgba(255,255,255,0.6);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--accent-color);
+  }
+
+  .rules-list {
+    list-style: none;
+    padding: 0;
+  }
+  .rules-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  .rules-list li:last-child { border-bottom: none; }
+  .rules-list strong { color: #c0392b; }
+
+  /* TÁBLÁZAT */
+  #table-container {
+    height: 720px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.7);
+    padding: 10px;
+  }
+  table {
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding:12px 8px;
+    text-align:left;
+    border-bottom:1px solid #eee;
+  }
+  th {
+    background:#fafafa;
+    font-weight:700;
+  }
+  tr.top {
+    background: linear-gradient(90deg,#fffbe6,#fff);
+  }
+  #tbody {
+    position:absolute;
+    width:100%;
+  }
+  /* Első oszlop balra igazítva */
+  td:nth-child(2) { text-align: left; font-weight: bold; }
+  
+  /* Dobogósok kiemelése */
+  tr:nth-child(1) td { background-color: #fffbe6; color: #8a6d3b; border-bottom: 2px solid #d4a017; } /* Arany */
+  tr:nth-child(2) td { background-color: #f5f5f5; color: #555; } /* Ezüst */
+  tr:nth-child(3) td { background-color: #fff5eb; color: #a85d32; } /* Bronz */
+
+  /* KAPCSOLAT & LÁBLÉC */
+  .contact-info {
+    text-align: center;
+    margin-top: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    margin-top: 40px;
+    background: var(--primary-color);
+    color: #ccc;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+  footer a { color: #fff; text-decoration: none; }
+
+  /* MOBIL NÉZET: Reklámok elrejtése */
+  @media (max-width: 900px) {
+    .main-layout { flex-direction: column; }
+    .ad-sidebar { display: none; } /* Mobilon zavaró lehet oldalt */
+    nav { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Kalaplengető Liga</div>
+  <ul>
+    <li><a href="#home">Főoldal</a></li>
+    <li><a href="#events">Esemény & Szabályok</a></li>
+    <li><a href="#leaderboard">Ranglista</a></li>
+    <li><a href="#contact">Kapcsolat</a></li>
+  </ul>
+</nav>
+
+<div class="main-layout">
+  <aside class="ad-sidebar">
+    <div>
+      <p>Hely a hirdetésnek</p>
+      <div style="width:140px; height:140px; background:#ddd; margin:auto; display:flex; align-items:center; justify-content:center;">Reklám 1</div>
+      <br>
+      <p>Keresse a helyi szalmaszálakat!</p>
+    </div>
+  </aside>
+
+  <main class="content-wrapper">
+    
+    <section id="home">
+      <h1>Szélesbálási Kalaplengető Bajnokság</h1>
+      <div class="info-box">
+        <h3>📢 Hírek a szervezőségtől</h3>
+        <p>A szervezők idén komoly informatikai fejlesztésbe kezdtek! Mivel Gizike, a szalmaszál-előkészítő üzem titkárnője jelenleg szülési szabadságon van, és babázik, a hagyományos "kockásfüzetes" pontozást felváltja ez a modern, digitális rendszer. A verseny tisztaságát továbbra is garantáljuk!</p>
+      </div>
+    </section>
+
+    <section id="events">
+      <h2>A Versenyről</h2>
+      <p>A <strong>Szélesbálási Fedettpályás Kalaplengető Verseny</strong> egy nagy hagyományokkal rendelkező, nemes küzdelem. A cél egyszerű, de a kivitelezés mesteri tudást igényel.</p>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 300px;">
+          <h3>📜 Szabályzat</h3>
+          <ul class="rules-list">
+            <li><strong>Feladat:</strong> Egy égő gyertya eloltása kalaplengetéssel.</li>
+            <li><strong>Távolság:</strong> 3 méter a kijelölt vonal mögött.</li>
+            <li><strong>Időkeret:</strong> Maximum 10 másodperc.</li>
+            <li><strong>Eszköz:</strong> Saját kalap (egy vagy két kézzel fogható). Eldobni tilos!</li>
+            <li><strong>Pontozás:</strong> 10 pontról indulunk. Másodpercenként 1 pont levonás.</li>
+            <li><strong>Sikertelen kísérlet:</strong> Ha a 10 mp lejár és a gyertya ég, 0 pont jár.</li>
+            <li><strong>Lebonyolítás:</strong> 3 forduló (lengetés). A legjobb kör pontszáma számít.</li>
+          </ul>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+          <h3>🏆 A Tét</h3>
+          <p>A verseny győztese nem csupán a dicsőséget nyeri el!</p>
+          <div style="background: #fffbe6; padding: 15px; border: 1px solid #e6dbb9; border-radius: 5px;">
+            <strong>Fődíj:</strong><br>
+            Egyszeri, korlátlan fogyasztás a helyi kocsmában!<br>
+            <small>(Felhasználható: 1 éven belül. Át nem ruházható. Csak saját fogyasztásra!)</small>
+          </div>
+          <h3>📍 Helyszín és Idő</h3>
+          <p>
+            <strong>Szélesbálás Faluház Bálterme</strong><br>
+            Arató utca 321. (Kocsmával szemben)<br>
+            <em>Következő verseny: 2025. Február 15. 14:00</em>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="leaderboard">
+      <h2>Aktuális Állás</h2>
+      <p class="small" style="text-align:center;">Az eredményeket a falu jegyzőjének okosórájával hitelesítjük (századmásodperc pontosság).</p>
+      
+      <div id="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Hely</th>
+              <th>Versenyző</th>
+              <th>1. kör</th>
+              <th>2. kör</th>
+              <th>3. kör</th>
+              <th>Legjobb Pont</th>
+              <th>Döntő idő (s)</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="contact">
+      <footer>
+        <h3>Kapcsolat</h3>
+        <p>Kérdésed van? Neveznél?</p>
+        <p><strong>Cím:</strong> Szélesbálás, Arató utca 321.</p>
+        <p><strong>Email:</strong> info@kalaplengeto-szelesbalas.hu</p>
+        <hr style="border-color: #444; margin: 20px 0;">
+        © 2025 Szélesbálási Kalaplengető Liga • <a href="#">Adatkezelés</a> • <a href="#">Impresszum</a>
+      </footer>
+    </section>
+
+  </main>
+
+  <aside class="ad-sidebar">
+    <div>
+      <p>Hirdetés helye</p>
+      <div style="width:140px; height:300px; background:#ddd; margin:auto; display:flex; align-items:center; justify-content:center;">Reklám 2</div>
+      <br>
+      <p>A Szélesbálási Pékség támogatásával</p>
+    </div>
+  </aside>
+</div>
+
+</body>
+</html>
