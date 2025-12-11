@@ -13,12 +13,12 @@
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* A háttérkép elérési útját hagytam, de tettem be egy backup színt */
-    background: #ececec url('../iktmikulas/ChatGPT Image 2025. dec. 11. 11_30_00.png') center/cover fixed;
+    background: #ececec url(../iktmikulas/istockphoto-182493016-612x612.jpg) center 10px / cover no-repeat fixed;
     margin: 0;
     color: #111;
     overflow-x: hidden;
   }
+
 
   /* NAVIGÁCIÓ */
   nav {
@@ -200,6 +200,20 @@
     .ad-sidebar { display: none; } /* Mobilon zavaró lehet oldalt */
     nav { flex-direction: column; gap: 10px; }
   }
+  /* KÉP JAVÍTÁSA */
+  #kep {
+    width: 100%;        /* Kitölti a rendelkezésre álló helyet */
+    height: auto;       /* Automatikusan igazodik a magasság */
+    display: flex;      /* Segít a pozicionálásban */
+    justify-content: center; /* Középre igazítja a képet */
+  }
+
+  #kep img {
+    max-width: 100%;    /* A kép sosem lesz szélesebb a kereténél */
+    height: auto;       /* Megtartja az oldalarányt (nem torzul) */
+    border-radius: 8px; /* Lekerekített sarkok a szebb kinézetért */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Kis árnyék, hogy kiemelkedjen */
+  }
 </style>
 </head>
 <body>
@@ -254,20 +268,11 @@
             <li><strong>Lebonyolítás:</strong> 3 forduló (lengetés). A legjobb kör pontszáma számít.</li>
           </ul>
         </div>
-        <div style="flex: 1; min-width: 300px;">
-          <h3>🏆 A Tét</h3>
-          <p>A verseny győztese nem csupán a dicsőséget nyeri el!</p>
-          <div style="background: #fffbe6; padding: 15px; border: 1px solid #e6dbb9; border-radius: 5px;">
-            <strong>Fődíj:</strong><br>
-            Egyszeri, korlátlan fogyasztás a helyi kocsmában!<br>
-            <small>(Felhasználható: 1 éven belül. Át nem ruházható. Csak saját fogyasztásra!)</small>
+        <div style="flex: 1;">
+          <div id="kep">
+            <img src="../iktmikulas/ChatGPT Image 2025. dec. 11. 11_30_00.png" alt="">
           </div>
-          <h3>📍 Helyszín és Idő</h3>
-          <p>
-            <strong>Szélesbálás Faluház Bálterme</strong><br>
-            Arató utca 321. (Kocsmával szemben)<br>
-            <em>Következő verseny: 2025. Február 15. 14:00</em>
-          </p>
+          
         </div>
       </div>
     </section>
