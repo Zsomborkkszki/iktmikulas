@@ -142,6 +142,25 @@ namespace iktmikulas
             Console.Write("Adja meg a versenyző harmadik idejét: ");
             double time3 = double.Parse(Console.ReadLine());
             Console.WriteLine("Az adatok rögzítése sikeres...");
+            UserDataWrite(name, point1, time1, point2, time2, point3, time3);
+            DisplayInteractiveMenu();
+        }
+        static void UserDataWrite(string name, int point1, double time1, int point2, double time2, int point3, double time3)
+        {
+            MySqlConnection connector = new MySqlConnection();
+            //Adatok írása az adatbázisba
+            connector.Open();
+            string command = "INSERT INTO versenyzok (Name, Pont1, Ido1, Pont2, Ido2, Pont3, Ido3) VALUES (@name, @point1, @time1, @point2, @time2, @point3, @time3);";
+            MySqlCommand writer = new MySqlCommand(command, connector);
+            writer.Parameters.AddWithValue("@name", name);
+            writer.Parameters.AddWithValue("@point1", point1);
+            writer.Parameters.AddWithValue("@time1", time1);
+            writer.Parameters.AddWithValue("@point2", point2);
+            writer.Parameters.AddWithValue("@time2", time2);
+            writer.Parameters.AddWithValue("@point3", point3);
+            writer.Parameters.AddWithValue("@time3", time3);
+            writer.ExecuteNonQuery();
+            connector.Close();
         }
     }
 }
