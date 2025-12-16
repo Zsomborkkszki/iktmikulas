@@ -24,7 +24,7 @@ namespace iktmikulas
             connector.ConnectionString = "server=localhost;user=root;password=;database=mikulas";
             Console.WriteLine("Csatlakozás a MySql adatbázishoz...");
             connector.Open();
-            MySqlCommand command2 = new MySqlCommand("SELECT Name, (Pont1 + Pont2 + Pont3) AS OsszesPont, Legjobbido FROM versenyzok ORDER BY OsszesPont DESC, Legjobbido ASC;", connector);
+            MySqlCommand command2 = new MySqlCommand("SELECT Name, Legjobbpont, Legjobbido FROM versenyzok ORDER BY Legjobbpont DESC, Legjobbido ASC;", connector);
             MySqlDataReader reader2 = command2.ExecuteReader();
             while (reader2.Read())
             {
@@ -250,16 +250,24 @@ namespace iktmikulas
             connector.Open();
             if (idovagypont == true)
             {
-                MySqlCommand beolvas = new MySqlCommand("SELECT * FROM versenyzok;", connector);
                 MySqlCommand reader = new MySqlCommand($"UPDATE versenyzok SET {valaszto} = '{ertek}' WHERE versenyzok.Name = '{valasztas}';", connector);
                 reader.ExecuteNonQuery();
                 
             }
             else
             {
-                MySqlCommand beolvas = new MySqlCommand("SELECT * FROM versenyzok", connector);
-                MySqlCommand reader = new MySqlCommand($"UPDATE versenyzok SET {valaszto} = {idoertek} WHERE versenyzok.Name = '{valasztas}';", connector);
+                MySqlCommand reader = new MySqlCommand($"UPDATE versenyzok SET {valaszto} = '{idoertek}' WHERE versenyzok.Name = '{valasztas}';", connector);
                 reader.ExecuteNonQuery();
+                MySqlCommand command = new MySqlCommand($"SELECT * FROM versenyzok WHERE versenyzok.Name = '{valasztas}';", connector);
+                MySqlDataReader reader2 = command.ExecuteReader();
+                reader2.Read();
+                    double Time1 = reader2.GetDouble("Ido1");
+                    double Time2 = reader2.GetDouble("Ido2");
+                    double Time3 = reader2.GetDouble("Ido3");
+                    double[] tomb = { Time1, Time2, Time3 };
+                reader2.Close();
+                    MySqlCommand writer = new MySqlCommand($"UPDATE versenyzok SET Legjobbido = '{tomb.Min()}' WHERE versenyzok.Name = '{valasztas}';", connector);
+                    writer.ExecuteNonQuery();
             }
             connector.Close();
         }
