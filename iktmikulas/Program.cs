@@ -14,9 +14,17 @@ namespace iktmikulas
     {
         static void Main(string[] args)
         {
-            List<Users> users = UserController.GetUserData();
-            GenerateHtmlAndOpen();
-            DisplayInteractiveMenu();  
+                List<Users> users = UserController.GetUserData();
+                GenerateHtmlFile();
+                string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\"));
+                string htmlFilePath = Path.Combine(projectRoot, "verseny_allas.html");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = htmlFilePath,
+                    UseShellExecute = true
+                });
+                DisplayInteractiveMenu();
+            
         }
         static void DataWrite()
         {
@@ -30,7 +38,7 @@ namespace iktmikulas
             while (reader2.Read())
             {
                 string name = reader2.GetString("Name");
-                int osszespont = reader2.GetInt32("OsszesPont");
+                int osszespont = reader2.GetInt32("Legjobbpont");
                 double legjobbido = reader2.GetDouble("Legjobbido");
                 Console.WriteLine($"Név: {name}, Összpont: {osszespont}, Legjobb idő: {legjobbido}");
             }
@@ -165,6 +173,7 @@ namespace iktmikulas
             writer.Parameters.AddWithValue("@legjobbido", tomb2.Min());
             writer.ExecuteNonQuery();
             connector.Close();
+            GenerateHtmlFile();
         }
 
         static void UserChanger()
@@ -271,7 +280,7 @@ namespace iktmikulas
                     writer.ExecuteNonQuery();
             }
             connector.Close();
-            GenerateHtmlAndOpen();
+            GenerateHtmlFile();
         }
 
         static void UserDelete(string name)
@@ -283,94 +292,68 @@ namespace iktmikulas
             MySqlCommand delete = new MySqlCommand($"DELETE FROM versenyzok WHERE versenyzok.Name = '{name}';", connector);
             delete.ExecuteNonQuery();
             connector.Close();
-            GenerateHtmlAndOpen();
+            GenerateHtmlFile();
         }
 
-        static void GenerateHtmlAndOpen()
+        // Ezt fogod hívni a rögzítés/szerkesztés/törlés után.
+        static void GenerateHtmlFile()
         {
-            Console.WriteLine("HTML táblázat frissítése és megnyitása...");
+            Console.WriteLine("HTML táblázat generálása (SQL lekérdezéssel)...");
 
-            // A HTML fájlt a projekt főgyökerébe mentjük, ahol a .sln is van
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\"));
             string htmlFilePath = Path.Combine(projectRoot, "verseny_allas.html");
 
-            StringBuilder htmlContent = new StringBuilder();
-            htmlContent.AppendLine("<!DOCTYPE html><html lang='hu'><head><meta charset='UTF-8'>");
-            htmlContent.AppendLine("<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>");
-            htmlContent.AppendLine("<style>");
-            htmlContent.AppendLine("body{background:#f8f9fa; overflow:hidden; font-family:sans-serif;}");
-            htmlContent.AppendLine(".village-logo{width:110px; height:110px; object-fit:contain; background:white; border-radius:10px; border:3px solid #d4af37; padding:5px;}");
-            htmlContent.AppendLine(".table-container{height:70vh; overflow:hidden; position:relative; margin-top:10px;}");
-            htmlContent.AppendLine(".scrolling-table{position:absolute; width:100%; transition:top 0.5s;}");
-            htmlContent.AppendLine(".rank-1{background-color:#fff3cd!important; font-weight:bold; font-size:1.2rem;}");
-            htmlContent.AppendLine("</style>");
+            string htmlContent = "<!DOCTYPE html><html lang='hu'><head><meta charset='UTF-8'>" +
+                                 "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>" +
+                                 "<style>body{background:#f8f9fa; overflow:hidden; font-family:sans-serif;} .village-logo{width:110px; height:110px; object-fit:contain; background:white; border-radius:10px; border:3px solid #d4af37; padding:5px;} .table-container{height:70vh; overflow:hidden; position:relative; margin-top:10px;} .scrolling-table{position:absolute; width:100%; transition:top 0.5s;} .rank-1{background-color:#fff3cd!important; font-weight:bold; font-size:1.2rem;} </style>" +
+                                 "<script>function scroll(){const b=document.getElementById('s');const t=document.getElementById('t');let top=0; setInterval(()=>{if(t.offsetHeight>b.offsetHeight){top-=1; if(Math.abs(top)>(t.offsetHeight-b.offsetHeight+50)){top=20;} t.style.top=top+'px';}},40);} setTimeout(()=>location.reload(),10000);</script>" +
+                                 "</head><body onload='scroll()'>" +
 
-            htmlContent.AppendLine("<script>");
-            htmlContent.AppendLine("function scroll(){const b=document.getElementById('s');const t=document.getElementById('t');let top=0;");
-            htmlContent.AppendLine("setInterval(()=>{if(t.offsetHeight>b.offsetHeight){top-=1; if(Math.abs(top)>(t.offsetHeight-b.offsetHeight+50)){top=20;} t.style.top=top+'px';}},40);}");
-            htmlContent.AppendLine("setTimeout(()=>location.reload(),10000);"); // 10 mp frissítés
-            htmlContent.AppendLine("</script></head><body onload='scroll()'>");
+                                 "<header class='bg-success text-white p-3 shadow-sm'><div class='container d-flex justify-content-between align-items-center'>" +
+                                 "<div class='text-center'><img src='Képernyőkép 2025-12-17 172433.png' class='village-logo'><br>SZÉLESBÁLÁS</div>" +
+                                 "<div class='text-center'><h1>KALAPLENGETŐ VERSENY</h1><p>Élő eredmények</p></div>" +
+                                 "<div class='text-center'><img src='Képernyőkép 2025-12-17 172615.png' class='village-logo'> <img src='Képernyőkép 2025-12-17 172728.png' class='village-logo'></div>" +
+                                 "</div></header>" +
 
-            htmlContent.AppendLine("<header class='bg-success text-white p-3 shadow-sm'><div class='container d-flex justify-content-between align-items-center'>");
+                                 "<main class='container-fluid px-4'><div class='table-container border bg-white shadow-lg rounded' id='s'>" +
+                                 "<table class='table table-striped table-hover mb-0 scrolling-table' id='t'>" +
+                                 "<thead class='table-dark sticky-top'><tr><th>Hely</th><th>Név</th><th>1. kör</th><th>2. kör</th><th>3. kör</th><th class='table-warning text-dark'>LEGJOBB</th></tr></thead><tbody>";
 
-            // KÉPEK ELÉRÉSE: Mivel a HTML a gyökérben van, közvetlenül a fájlneveket használjuk
-            htmlContent.AppendLine("<div class='text-center'><img src='Képernyőkép 2025-12-17 172433.png' class='village-logo' alt='Címer'><br><small class='fw-bold'>SZÉLESBÁLÁS</small></div>");
-            htmlContent.AppendLine("<div class='text-center'><h1 class='display-4 fw-bold'>KALAPLENGETŐ VERSENY</h1><p class='h5'>Faluház Bálterme - Panasonic OLED 4K</p></div>");
-            htmlContent.AppendLine("<div class='text-center d-flex gap-2'>");
-            htmlContent.AppendLine("<img src='Képernyőkép 2025-12-17 172615.png' class='village-logo' alt='Sör'>");
-            htmlContent.AppendLine("<img src='Képernyőkép 2025-12-17 172728.png' class='village-logo' alt='Hurka'>");
-            htmlContent.AppendLine("</div></div></header>");
-
-            htmlContent.AppendLine("<main class='container-fluid px-4'>");
-            htmlContent.AppendLine("<div class='table-container border bg-white shadow-lg rounded' id='s'>");
-            htmlContent.AppendLine("<table class='table table-striped table-hover mb-0 scrolling-table' id='t'>");
-            htmlContent.AppendLine("<thead class='table-dark sticky-top'><tr>");
-            htmlContent.AppendLine("<th>Helyezés</th><th>Versenyző neve</th><th>1. kör</th><th>2. kör</th><th>3. kör</th><th class='table-warning text-dark'>LEGJOBB PONT</th>");
-            htmlContent.AppendLine("</tr></thead><tbody>");
-
-            try
+            
+            using (MySqlConnection conn = new MySqlConnection("server=localhost;user=root;password=;database=mikulas"))
             {
-                using (MySqlConnection conn = new MySqlConnection("server=localhost;user=root;password=;database=mikulas"))
+                conn.Open();
+                string query = "SELECT Name, Pont1, Ido1, Pont2, Ido2, Pont3, Ido3, Legjobbpont, Legjobbido FROM versenyzok ORDER BY Legjobbpont DESC, Legjobbido ASC;";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+
+                using (MySqlDataReader r = cmd.ExecuteReader())
                 {
-                    conn.Open();
-                    string query = "SELECT * FROM versenyzok ORDER BY Legjobbpont DESC, Legjobbido ASC, Name ASC";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    using (MySqlDataReader r = cmd.ExecuteReader())
+                    int rank = 1;
+                    while (r.Read())
                     {
-                        int rank = 1;
-                        while (r.Read())
-                        {
-                            string rowClass = (rank == 1) ? "class='rank-1'" : "";
-                            htmlContent.AppendLine($"<tr {rowClass}>");
-                            htmlContent.AppendLine($"<td class='fw-bold'>{rank}.</td>");
-                            htmlContent.AppendLine($"<td>{r["Name"]}</td>");
-                            htmlContent.AppendLine($"<td>{r["Pont1"]} pt ({r["Ido1"]}s)</td>");
-                            htmlContent.AppendLine($"<td>{r["Pont2"]} pt ({r["Ido2"]}s)</td>");
-                            htmlContent.AppendLine($"<td>{r["Pont3"]} pt ({r["Ido3"]}s)</td>");
-                            htmlContent.AppendLine($"<td><span class='badge bg-danger fs-5'>{r["Legjobbpont"]} pt</span> <small class='text-muted'>({r["Legjobbido"]}s)</small></td>");
-                            htmlContent.AppendLine("</tr>");
-                            rank++;
-                        }
+                        string sorSzin = "";
+                        if (rank == 1) sorSzin = "class='rank-1'";
+
+                        htmlContent += "<tr " + sorSzin + ">" +
+                                       "<td class='fw-bold'>" + rank + ".</td>" +
+                                       "<td>" + r.GetString("Name") + "</td>" +
+                                       "<td>" + r.GetInt32("Pont1") + "p (" + r.GetDouble("Ido1") + "s)</td>" +
+                                       "<td>" + r.GetInt32("Pont2") + "p (" + r.GetDouble("Ido2") + "s)</td>" +
+                                       "<td>" + r.GetInt32("Pont3") + "p (" + r.GetDouble("Ido3") + "s)</td>" +
+                                       "<td><b class='text-danger'>" + r.GetInt32("Legjobbpont") + "p</b> (" + r.GetDouble("Legjobbido") + "s)</td>" +
+                                       "</tr>";
+                        rank++;
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine("Hiba az adatbázisnál: " + ex.Message); }
 
-            htmlContent.AppendLine("</tbody></table></div></main>");
-            htmlContent.AppendLine("<footer class='fixed-bottom bg-dark text-white p-2 d-flex justify-content-around'>");
-            htmlContent.AppendLine("<span>Mérve: Géza gyerek (Temu) okosórája</span>");
-            htmlContent.AppendLine("<span>Gép: Dell Latitude E5570 | Akku: 91% | OS: Szélesbálás v1.0</span>");
-            htmlContent.AppendLine("</footer></body></html>");
+            // 3. HTML lezárása
+            htmlContent += "</tbody></table></div></main>" +
+                           "<footer class='fixed-bottom bg-dark text-white p-2 text-center'>Mérve: Géza okosórája | Gép: Dell Latitude</footer>" +
+                           "</body></html>";
 
-            // Fájl mentése
-            File.WriteAllText(htmlFilePath, htmlContent.ToString(), Encoding.UTF8);
-
-            // BÖNGÉSZŐ MEGNYITÁSA (Csak ha még nincs megnyitva, vagy minden frissítéskor - a reload miatt elég egyszer)
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = htmlFilePath,
-                UseShellExecute = true
-            });
+            // Fájlba írás
+            File.WriteAllText(htmlFilePath, htmlContent, Encoding.UTF8);
         }
     }
 }

@@ -32,7 +32,9 @@ namespace iktmikulas.Models
                 double time2 = reader.GetDouble("Ido2");
                 int point3 = reader.GetInt32("Pont3");
                 double time3 = reader.GetDouble("Ido3");
-                Users user = new Users(name, point1, time1, point2, time2, point3, time3);
+                int bestpoint = reader.GetInt32("Legjobbpont");
+                double besttime = reader.GetDouble("Legjobbido");
+                Users user = new Users(name, point1, time1, point2, time2, point3, time3, besttime, bestpoint);
                 users.Add(user);
             }
             connector.Close();

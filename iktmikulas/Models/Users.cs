@@ -15,8 +15,10 @@ namespace iktmikulas.Models
         double Time2;
         int Point3;
         double Time3;
+        double besttime1;
+        int bestscore1;
 
-        public Users(string name, int point1, double time1, int point2, double time2, int point3, double time3)
+        public Users(string name, int point1, double time1, int point2, double time2, int point3, double time3, double besttime, int bestscore)
         {
             Name1 = name;
             Point11 = point1;
@@ -25,6 +27,8 @@ namespace iktmikulas.Models
             Time21 = time2;
             Point31 = point3;
             Time31 = time3;
+            Bestscore1 = bestscore;
+            Besttime1 = besttime;
         }
 
         public string Name1 { get => Name; set => Name = value; }
@@ -34,6 +38,8 @@ namespace iktmikulas.Models
         public double Time21 { get => Time2; set => Time2 = value; }
         public int Point31 { get => Point3; set => Point3 = value; }
         public double Time31 { get => Time3; set => Time3 = value; }
+        public double Besttime1 { get => besttime1; set => besttime1 = value; }
+        public int Bestscore1 { get => bestscore1; set => bestscore1 = value; }
 
         public Users()
         {
