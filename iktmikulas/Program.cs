@@ -295,7 +295,6 @@ namespace iktmikulas
             GenerateHtmlFile();
         }
 
-        // Ezt fogod hívni a rögzítés/szerkesztés/törlés után.
         static void GenerateHtmlFile()
         {
             Console.WriteLine("HTML táblázat generálása (SQL lekérdezéssel)...");
@@ -346,13 +345,9 @@ namespace iktmikulas
                     }
                 }
             }
-
-            // 3. HTML lezárása
             htmlContent += "</tbody></table></div></main>" +
                            "<footer class='fixed-bottom bg-dark text-white p-2 text-center'>Mérve: Géza okosórája | Gép: Dell Latitude</footer>" +
                            "</body></html>";
-
-            // Fájlba írás
             File.WriteAllText(htmlFilePath, htmlContent, Encoding.UTF8);
         }
     }
