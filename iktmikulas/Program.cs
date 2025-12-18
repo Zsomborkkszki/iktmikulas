@@ -262,7 +262,16 @@ namespace iktmikulas
             {
                 MySqlCommand reader = new MySqlCommand($"UPDATE versenyzok SET {valaszto} = '{ertek}' WHERE versenyzok.Name = '{valasztas}';", connector);
                 reader.ExecuteNonQuery();
-                
+                MySqlCommand command = new MySqlCommand($"SELECT * FROM versenyzok WHERE versenyzok.Name = '{valasztas}';", connector);
+                MySqlDataReader reader2 = command.ExecuteReader();
+                reader2.Read();
+                double Point1 = reader2.GetDouble("Pont1");
+                double Point2 = reader2.GetDouble("Pont2");
+                double Point3 = reader2.GetDouble("Pont3");
+                double[] tomb = { Point1, Point2, Point3 };
+                reader2.Close();
+                MySqlCommand writer = new MySqlCommand($"UPDATE versenyzok SET Legjobbpont = '{tomb.Max()}' WHERE versenyzok.Name = '{valasztas}';", connector);
+                writer.ExecuteNonQuery();
             }
             else
             {
